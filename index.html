@@ -40,7 +40,9 @@
             Waiting for channel name...
           </div>
           <p></p>
+
           <div id="options-container" class="container">
+
             <div class="row">
               <div class="col-6">
                 <label for="volume"><small>Speech Volume</small></label>
@@ -50,6 +52,7 @@
                 <input id="volume" type="range" min="0" max="1" value="1" step="0.1">
               </div>
             </div>
+
             <div class="row">
               <div class="col-6">
                 <label for="voiceSelect"><small>Voice</small></label>
@@ -58,18 +61,52 @@
                 <select id="voiceSelect" class="form-control"></select>
               </div>
             </div>
+
             <div class="row">
-              <div class="col-6">
-                <label for="ignore-filter"><small>Ignore filter</small></label>
+                <button class="btn btn-secondary" type="button" id="settingsBtn">
+                  Settings
+                </button>
+            </div>
+
+            <div class="d-none" id="settings-content">
+                
+              <p></p>
+              <div class="row">
+                <div class="col-6">
+                  <label for="ignore-filter"><small>Ignore filter</small></label>
+                </div>
+                <div class="col-6">
+                  <input id="ignore-filter-toggle" type="checkbox" />
+                </div>
               </div>
-              <div class="col-6">
-                <input id="ignore-filter-toggle" type="checkbox" />
+
+              <div class="row">
+                <div class="col-6">
+                  <label for="display-reward-id"><small>Display reward-id</small></label>
+                </div>
+                <div class="col-6">
+                  <input id="display-reward-id-toggle" type="checkbox" />
+                </div>
               </div>
-            </div>                          
+
+              <div id="entry-content">
+              </div>
+              
+              <p></p>
+              <div class="row">
+                <button class="btn btn-primary" type="button" id="addEntryBtn">
+                  Add entry
+                </button>
+              </div>
+
+            </div>
+
             <div class="row">
               <audio id="audiotrack"></audio>
-            </div>         
+            </div>  
+
           </div>
+
         </div>
       </div>
     </div>
