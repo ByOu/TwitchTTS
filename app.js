@@ -10,7 +10,7 @@ class TTS
     this.messageCount = 0;
     this.easterEggInterval = 50;
     this.ttsTag = "!tts";
-    this.settings = {entries: []};
+    this.rewardSettings = [];
     this.loaded = false;
 
     this.listenBtn = document.getElementById("listenBtn");
@@ -43,16 +43,26 @@ class TTS
       return;
     }    
 
-    let loadedSettings = JSON.parse(window.localStorage.getItem("settings"));
+    // TODO: remove after deprecation
+    let oldSettings = JSON.parse(window.localStorage.getItem("settings"));
+
+    if (oldSettings != undefined)
+    {
+      let newRewardSettings = oldSettings.entries;
+      window.localStorage.setItem("rewardSettings", JSON.stringify(newRewardSettings));
+      window.localStorage.removeItem("settings");
+    }
+
+    let loadedSettings = JSON.parse(window.localStorage.getItem("rewardSettings"));
 
     if (loadedSettings != undefined)
     {
-      this.settings = loadedSettings;
+      this.rewardSettings = loadedSettings;
     }
 
-    for (let i = 0; i < this.settings.entries.length; ++i)
+    for (let i = 0; i < this.rewardSettings.length; ++i)
     {
-      this.createEntry(i, this.settings.entries[i].id, this.settings.entries[i].voice);
+      this.createEntry(i, this.rewardSettings[i].id, this.rewardSettings[i].voice);
     }
 
     this.loaded = true;
@@ -114,9 +124,9 @@ class TTS
       return false;
     }
 
-    for (let i = 0; i < this.settings.entries.length; ++i)
+    for (let i = 0; i < this.rewardSettings.length; ++i)
     {
-      if (this.settings.entries[i].id == reward)
+      if (this.rewardSettings[i].id == reward)
       {
         return true;
       }
@@ -256,10 +266,10 @@ write(_tags, _message, _isValid)
 
   onAddEntryBtnClicked(_event)
   {
-    let entryNumber = this.settings.entries.length;
+    let entryNumber = this.rewardSettings.length;
 
     this.createEntry(entryNumber, "", "");
-    this.settings.entries[entryNumber] = {id: "", voice: ""};
+    this.rewardSettings[entryNumber] = {id: "", voice: ""};
   }
 
 //-----------------------------------------------
@@ -292,8 +302,8 @@ write(_tags, _message, _isValid)
 
     let voiceName = voiceEntry.options[voiceEntry.selectedIndex].attributes["data-name"].value;
 
-    this.settings.entries[_entryNumber] = {id: rewardEntry.value, voice: voiceName};
-    window.localStorage.setItem("settings", JSON.stringify(this.settings));
+    this.rewardSettings[_entryNumber] = {id: rewardEntry.value, voice: voiceName};
+    window.localStorage.setItem("rewardSettings", JSON.stringify(this.rewardSettings));
   }
 
 //-----------------------------------------------
@@ -365,11 +375,11 @@ write(_tags, _message, _isValid)
 
     if (reward != undefined)
     {
-      for (let i = 0; i < this.settings.entries.length; ++i)
+      for (let i = 0; i < this.rewardSettings.length; ++i)
       {
-        if (this.settings.entries[i].id == reward)
+        if (this.rewardSettings[i].id == reward)
         {
-          voiceName = this.settings.entries[i].voice;
+          voiceName = this.rewardSettings[i].voice;
           break;
         }
       }
