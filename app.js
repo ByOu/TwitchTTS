@@ -11,6 +11,7 @@ class TTS
     this.easterEggInterval = 50;
     this.ttsTag = "!tts";
     this.settings = {entries: []};
+    this.loaded = false;
 
     this.listenBtn = document.getElementById("listenBtn");
     this.volumeSlider = document.getElementById("volume");
@@ -37,6 +38,11 @@ class TTS
 
   loadSettings()
   {
+    if (this.loaded)
+    {
+      return;
+    }    
+
     let loadedSettings = JSON.parse(window.localStorage.getItem("settings"));
 
     if (loadedSettings != undefined)
@@ -48,6 +54,8 @@ class TTS
     {
       this.createEntry(i, this.settings.entries[i].id, this.settings.entries[i].voice);
     }
+
+    this.loaded = true;
   }
 
 //-----------------------------------------------
