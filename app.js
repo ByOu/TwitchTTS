@@ -43,7 +43,16 @@ class TTS
       return;
     }    
 
-    // TODO: remove after deprecation
+    this.loadRewardSettings();
+
+    this.loaded = true;
+  }
+
+//-----------------------------------------------
+
+  loadRewardSettings()
+  { 
+     // TODO: remove after deprecation
     let oldSettings = JSON.parse(window.localStorage.getItem("settings"));
 
     if (oldSettings != undefined)
@@ -52,20 +61,25 @@ class TTS
       window.localStorage.setItem("rewardSettings", JSON.stringify(newRewardSettings));
       window.localStorage.removeItem("settings");
     }
-
+  
     let loadedSettings = JSON.parse(window.localStorage.getItem("rewardSettings"));
-
+  
     if (loadedSettings != undefined)
     {
       this.rewardSettings = loadedSettings;
     }
-
+  
     for (let i = 0; i < this.rewardSettings.length; ++i)
     {
       this.createEntry(i, this.rewardSettings[i].id, this.rewardSettings[i].voice);
     }
+  }
 
-    this.loaded = true;
+//-----------------------------------------------
+
+  saveRewardSettings()
+  {
+    window.localStorage.setItem("rewardSettings", JSON.stringify(this.rewardSettings));
   }
 
 //-----------------------------------------------
@@ -303,7 +317,7 @@ write(_tags, _message, _isValid)
     let voiceName = voiceEntry.options[voiceEntry.selectedIndex].attributes["data-name"].value;
 
     this.rewardSettings[_entryNumber] = {id: rewardEntry.value, voice: voiceName};
-    window.localStorage.setItem("rewardSettings", JSON.stringify(this.rewardSettings));
+    this.saveRewardSettings();
   }
 
 //-----------------------------------------------
