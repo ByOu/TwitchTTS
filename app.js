@@ -8,17 +8,19 @@ class TTS
   constructor()
   {
     this.messageCount = 0;
-    this.easterEggInterval = 50;
+    this.easterEggs = [{ message: "! David l'a dit. ", interval: 100, postappend: true }, { message: "Merci Luc. ", interval: 50, postappend: false}];
     this.ttsTag = "!tts";
     this.rewardSettings = [];
     this.loaded = false;
 
     this.listenBtn = document.getElementById("listenBtn");
+    this.testBtn = document.getElementById("testBtn");
     this.volumeSlider = document.getElementById("volume");
     this.settingsBtn = document.getElementById("settingsBtn");
     this.addEntryBtn = document.getElementById("addEntryBtn");
     this.status = document.getElementById("status");
     this.channel = document.getElementById("channelname");
+    this.testText = document.getElementById("testText");
     this.ignoreFilterCheckbox = document.getElementById("ignore-filter-toggle");
     this.displayRewardIdCheckbox = document.getElementById("display-reward-id-toggle");
     this.messages = document.getElementById("messages");
@@ -28,6 +30,7 @@ class TTS
     this.entryContent = document.getElementById("entry-content");
 
     this.listenBtn.addEventListener('click', (event) => this.onListenBtnClicked(event));
+    this.testBtn.addEventListener('click', (event) => this.onTestBtnClicked(event));
     this.volumeSlider.addEventListener('change', (event) => this.onVolumeChanged(event));
     this.settingsBtn.addEventListener('click', (event) => this.onSettingsBtnClicked(event));
     this.addEntryBtn.addEventListener('click', (event) => this.onAddEntryBtnClicked(event));
@@ -166,9 +169,20 @@ class TTS
     ++this.messageCount;
     _message = _message.replace(this.ttsTag, "");
 
-    if ((this.messageCount % this.easterEggInterval) == 0)
+    for (const entry of this.easterEggs)
     {
-      _message = "Merci Luc. " + _message;
+      if ((this.messageCount % entry.interval) == 0)
+      {
+        if (entry.postappend)
+        {
+          _message = _message + entry.message;
+        }
+        else
+        {
+          _message = entry.message + _message;
+        }
+        break;
+      }
     }
 
     return _message;
@@ -359,6 +373,31 @@ write(_tags, _message, _isValid)
     this.listenBtn.textContent = "Listening...";
     this.listenBtn.disabled = true;
   }
+
+//-----------------------------------------------
+
+onTestBtnClicked(_event)
+{
+  let testText = this.testText.value;
+
+  _event.preventDefault();
+
+  let voiceName = this.voiceSelect.selectedOptions[0].getAttribute("data-name");
+
+  const voices = window.speechSynthesis.getVoices();
+  let voice = undefined;
+  
+  for (let i = 0; i < voices.length; ++i)
+  {
+    if (voices[i].name === voiceName)
+    {
+      voice = voices[i];
+      break;
+    }
+  }
+
+  this.speak(testText, voice);
+}
 
 //-----------------------------------------------
 
